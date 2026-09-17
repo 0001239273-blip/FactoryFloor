@@ -6,22 +6,32 @@ public class ProjetilTorreta : MonoBehaviour
     [Header("Movimento")]
     [SerializeField] private float velocidade = 8f;
 
-    private void Update()
+    private Rigidbody2D rb;
+
+    private void Awake()
     {
-        // Move o projétil para a esquerda
-        transform.Translate(
-            Vector2.left * velocidade * Time.deltaTime
-        );
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void FixedUpdate()
+    {
+        rb.linearVelocity = Vector2.left * velocidade;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Se acertar o Player, reinicia a cena
         if (other.CompareTag("Player"))
         {
             SceneManager.LoadScene(
                 SceneManager.GetActiveScene().buildIndex
             );
+
+            return;
+        }
+
+        if (other.CompareTag("DestroyZone"))
+        {
+            Destroy(gameObject);
         }
     }
 }
